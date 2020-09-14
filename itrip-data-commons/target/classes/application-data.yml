@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    #  配置数据库连接的四个基本信息
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/itrip_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: root
+    password: root
+    #      数据库连接池的类型
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      #      数据库连接池的信息
+      min-idle: 3
+      max-active: 15
+      initial-size: 5
+      min-evictable-idle-time-millis: 30000
+      max-evictable-idle-time-millis: 60000
+mybatis:
+  #  mapper 文件的路径
+  mapper-locations: classpath:/mapper/*.Mapper.xml
+  #  mapper 文件中实体类的路径
+  type-aliases-package: cn.ekgc.itrip.pojo.entity

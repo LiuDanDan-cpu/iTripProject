@@ -1,0 +1,10 @@
+server:
+#  设置端口号
+  port: 22222
+spring:
+  application:
+#    设置应用名
+    name: itrip-user-provider
+  profiles:
+#    设置需要加载的文件
+    active: eureka-client, data
