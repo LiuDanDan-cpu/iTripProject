@@ -18,6 +18,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+		<java-sms-sdk.version>1.0.3</java-sms-sdk.version>
 	</properties>
 
 	<dependencies>
@@ -33,6 +34,19 @@
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
 		<!-- 配置Open feign [END]-->
+		<!-- 配置邮件依赖 [BEGIN]-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		<!-- 配置邮件依赖 [END]-->
+		<!-- 配置短信的依赖 [BEGIN]-->
+		<dependency>
+			<groupId>com.cloopen</groupId>
+			<artifactId>java-sms-sdk</artifactId>
+			<version>${java-sms-sdk.version}</version>
+		</dependency>
+		<!-- 配置短信的依赖 [END]-->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
