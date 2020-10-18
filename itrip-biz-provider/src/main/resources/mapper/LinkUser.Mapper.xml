@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ekgc.itrip.dao.LinkUserDao">
+	<select id="getListByQuery" parameterType="LinkUser" resultType="LinkUser">
+		SELECT
+			*
+		FROM
+			itrip_user_link_user
+		<where>
+			<trim suffixOverrides="and">
+				<if test="userId != null">userId=#{userId} and </if>
+				<if test="linkUserName != null">linkUserName like concat('%', #{linkUserName}, '%') and </if>
+			</trim>
+		</where>
+	</select>
+	<insert id="saveLinkUser" parameterType="LinkUser">
+		INSERT INTO itrip_user_link_user(
+				<trim suffixOverrides=",">
+					<if test="linkUserName != null">linkUserName, </if>
+					<if test="linkIdCard != null">linkIdCard, </if>
+					<if test="linkPhone != null">linkPhone, </if>
+					<if test="userId != null">userId, </if>
+					<if test="creationDate != null">creationDate, </if>
+					<if test="createdBy != null">createdBy, </if>
+					<if test="modifyDate != null">modifyDate, </if>
+					<if test="modifiedBy != null">modifiedBy, </if>
+					<if test="linkIdCardType != null">linkIdCardType, </if>
+				</trim>
+		)VALUES(
+				<trim suffixOverrides=",">
+					<if test="linkUserName != null">#{linkUserName} , </if>
+					<if test="linkIdCard != null">#{linkIdCard} , </if>
+					<if test="linkPhone != null">#{linkPhone} , </if>
+					<if test="userId != null">#{userId} , </if>
+					<if test="creationDate != null">#{creationDate} , </if>
+					<if test="createdBy != null">#{createdBy} , </if>
+					<if test="modifyDate != null">#{modifyDate} , </if>
+					<if test="modifiedBy != null">#{modifiedBy} , </if>
+					<if test="linkIdCardType != null">#{linkIdCardType} , </if>
+				</trim>
+		)
+	</insert>
+	<delete id="deleteLinkUser" parameterType="java.lang.Long">
+		DELETE FROM
+			itrip_user_link_user
+			<where>
+				<trim suffixOverrides="and">
+					<if test="query != null">id=${query} and</if>
+				</trim>
+			</where>
+	</delete>
+<!--	<select id="getLinkUser" parameterType="java.lang.Long" resultType="LinkUser">-->
+<!--		SELECT-->
+<!--		*-->
+<!--		FROM-->
+<!--		itrip_user_link_user-->
+<!--		<where>-->
+<!--			<trim suffixOverrides="and">-->
+<!--				<if test="parseLong != null">id=#{parseLong} and </if>-->
+<!--				<if test="linkUserName != null">linkUserName like concat('%', #{linkUserName}, '%') and </if>-->
+<!--			</trim>-->
+<!--		</where>-->
+<!--	</select>-->
+	<update id="updateLinkUser" parameterType="LinkUser">
+		UPDATE itrip_user_link_user
+		<set>
+			<trim suffixOverrides=",">
+				<if test="linkUserName != null">linkUserName=#{linkUserName}, </if>
+				<if test="linkIdCard != null">linkIdCard=#{linkIdCard}, </if>
+				<if test="linkPhone != null">linkPhone=#{linkPhone}, </if>
+				<if test="modifiedBy != null">modifiedBy=#{modifiedBy}, </if>
+				<if test="linkIdCardType != null">linkIdCardType=#{linkIdCardType}, </if>
+				<if test="modifiedBy != null">modifiedBy=#{modifiedBy}, </if>
+				<if test="modifyDate != null">modifyDate=#{modifyDate}, </if>
+			</trim>
+		</set>
+		where id=#{id}
+	</update>
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ekgc.itrip.dao.StoreDao">
+	<!--	查询最近一次更新的库存表  [BEGIN]   -->
+	<select id="getListByQuery" parameterType="Store" resultType="Store">
+		SELECT
+			a.id,
+			a.roomId,
+			a.hotelId,
+			MAX(a.recordDate),
+			a.store,
+			a.creationDate
+		FROM
+			itrip_hotel_temp_store a
+		<where>
+			<trim suffixOverrides="and">
+				<if test="roomId != null">roomId = #{roomId} and</if>
+				<if test="hotelId != null">hotelId = #{hotelId} and</if>
+			</trim>
+		</where>
+	</select>
+	<!--	查询最近一次更新的库存表  [END]   -->
+	<insert id="addStore" parameterType="Store">
+		INSERT INTO itrip_hotel_temp_store(
+			<trim suffixOverrides=",">
+				<if test="hotelId != null">hotelId, </if>
+				<if test="roomId != null">roomId, </if>
+				<if test="recordDate != null">recordDate, </if>
+				<if test="store != null">store, </if>
+				<if test="creationDate != null">creationDate, </if>
+			</trim>
+		) VALUES (
+			<trim suffixOverrides=",">
+				<if test="hotelId != null">#{hotelId} , </if>
+				<if test="roomId != null">#{roomId} , </if>
+				<if test="recordDate != null">#{recordDate} ,</if>
+				<if test="store != null">#{store} ,</if>
+				<if test="creationDate != null">#{creationDate} ,</if>
+			</trim>
+		)
+	</insert>
+</mapper>

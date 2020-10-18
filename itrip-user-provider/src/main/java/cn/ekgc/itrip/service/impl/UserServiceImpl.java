@@ -224,4 +224,21 @@ public class UserServiceImpl implements UserService {
             return ResultVO.failure("请输入123456");
         }
     }
+    /**
+     * <b>用户退出</b>
+     * @param token
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public ResultVO userOut(String token) throws Exception {
+        System.out.println(token);
+        if (token!=null){
+            User user= (User) redisUtil.getFromRedis(token,User.class);
+            if (user!=null){
+                redisUtil.saveToken(token,null, 0L);
+            }
+        }
+        return ResultVO.success("退出成功");
+    }
 }

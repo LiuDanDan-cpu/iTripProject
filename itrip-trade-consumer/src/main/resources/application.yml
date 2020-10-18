@@ -1,0 +1,7 @@
+server:
+  port: 8888
+spring:
+  application:
+    name: itrip-trade-consumer
+  profiles:
+    active: eureka-client, Email

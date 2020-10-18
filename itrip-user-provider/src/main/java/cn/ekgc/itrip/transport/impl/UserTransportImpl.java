@@ -96,4 +96,15 @@ public class UserTransportImpl implements UserTransport {
     public ResultVO loginUser(@RequestParam String name, @RequestParam String password) throws Exception {
         return userService.loginUser(name,password);
     }
+    /**
+     * <b>用户退出</b>
+     * @param token
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/Out")
+    @Override
+    public ResultVO userOut(@RequestParam String token) throws Exception {
+        return userService.userOut(token);
+    }
 }

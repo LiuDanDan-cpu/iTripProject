@@ -1,0 +1,7 @@
+server:
+  port: 32222
+spring:
+  application:
+    name: itrip-search-provide
+  profiles:
+    active: eureka-client, Email, solr

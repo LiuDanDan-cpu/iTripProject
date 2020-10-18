@@ -49,21 +49,22 @@ public class UserController extends BaseController {
 
     /**
      * <b>添加用户信息</b>
+     *
      * @param userVO
      * @return
      * @throws Exception
      */
     @PostMapping("/doregister")
-    public ResultVO saveUser(@RequestBody UserVO userVO) throws Exception{
-       //校验用户所提交的邮箱是否有效
-        System.out.println(userVO.getUserCode()+"====="+userVO.getUserPassword());
+    public ResultVO saveUser(@RequestBody UserVO userVO) throws Exception {
+        //校验用户所提交的邮箱是否有效
+        System.out.println(userVO.getUserCode() + "=====" + userVO.getUserPassword());
         if (ValidateUtil.checkEmail(userVO.getUserCode())
-                &&ValidateUtil.checkPassword(userVO.getUserPassword())){
+                && ValidateUtil.checkPassword(userVO.getUserPassword())) {
             //校验邮箱唯一性
-            if (userTransport.queryUserCodeIsCanUsed(userVO.getUserCode())){
+            if (userTransport.queryUserCodeIsCanUsed(userVO.getUserCode())) {
                 //进行用户保存
                 //将UserVO 转换为User
-                User user=new User();
+                User user = new User();
                 user.setUserCode(userVO.getUserCode());
                 user.setUserPassword(MD5Util.encrypt(userVO.getUserPassword()));
                 user.setUserName(userVO.getUserName());
@@ -72,35 +73,37 @@ public class UserController extends BaseController {
                 user.setCreationDate(new Date());
                 user.setModifyDate(new Date());
                 user.setActivated(ActivatedEnum.ACTIVATED_FALSE.getCode());
-                boolean saveFlag=userTransport.saveUser(user);
-                if (saveFlag){
+                boolean saveFlag = userTransport.saveUser(user);
+                if (saveFlag) {
                     return ResultVO.success();
-                }else {
+                } else {
                     return ResultVO.failure("保存失败");
                 }
-            }else {
+            } else {
                 return ResultVO.failure("该邮箱地址已被注册");
             }
-        }else {
+        } else {
             return ResultVO.failure("请填写正确的邮箱地址和登录密码");
         }
     }
+
     /**
      * <b>添加用户手机号信息</b>
+     *
      * @param userVO
      * @return
      * @throws Exception
      */
     @PostMapping("/registerbyphone")
-    public ResultVO saveUserByCellphone(@RequestBody UserVO userVO) throws Exception{
+    public ResultVO saveUserByCellphone(@RequestBody UserVO userVO) throws Exception {
         //校验用户所提交的邮箱是否有效
         if (ValidateUtil.checkCellphone(userVO.getUserCode())
-                &&ValidateUtil.checkPassword(userVO.getUserPassword())){
+                && ValidateUtil.checkPassword(userVO.getUserPassword())) {
             //校验邮箱唯一性
-            if (userTransport.queryUserCodeIsCanUsed(userVO.getUserCode())){
+            if (userTransport.queryUserCodeIsCanUsed(userVO.getUserCode())) {
                 //进行用户保存
                 //将UserVO 转换为User
-                User user=new User();
+                User user = new User();
                 user.setUserCode(userVO.getUserCode());
                 user.setUserPassword(MD5Util.encrypt(userVO.getUserPassword()));
                 user.setUserName(userVO.getUserName());
@@ -109,72 +112,73 @@ public class UserController extends BaseController {
                 user.setCreationDate(new Date());
                 user.setModifyDate(new Date());
                 user.setActivated(ActivatedEnum.ACTIVATED_FALSE.getCode());
-                boolean saveFlag=userTransport.saveUser(user);
-                if (saveFlag){
+                boolean saveFlag = userTransport.saveUser(user);
+                if (saveFlag) {
                     return ResultVO.success();
-                }else {
+                } else {
                     return ResultVO.failure("保存失败");
                 }
-            }else {
+            } else {
                 return ResultVO.failure("该手机号已被注册");
             }
-        }else {
+        } else {
             return ResultVO.failure("请填写正确的手机号码和登录密码");
         }
     }
 
     /**
      * <b>邮箱激活</b>
+     *
      * @param user
      * @param code
      * @return
      * @throws Exception
      */
     @PutMapping("/activate")
-    public ResultVO verifyCodeByMail(String user,String code)throws Exception{
+    public ResultVO verifyCodeByMail(String user, String code) throws Exception {
         if (ValidateUtil.checkEmail(user)
-                &&code!=null&&!"".equals(code)){
-            User entity=new User();
+                && code != null && !"".equals(code)) {
+            User entity = new User();
             entity.setUserCode(user);
             //通过user查询是否注册
             entity = userTransport.getUser(entity);
-            if(entity.getId()!=null){
+            if (entity.getId() != null) {
                 //则此时有该用户
-                if (entity.getActivated().equals(ActivatedEnum.ACTIVATED_FALSE.getCode())){
+                if (entity.getActivated().equals(ActivatedEnum.ACTIVATED_FALSE.getCode())) {
                     //说明此时没有激活
                     //获取redis中的真激活码
                     String isCode = userTransport.getActivated(user);
-                    if (isCode!=null){
+                    if (isCode != null) {
                         //可以进行对比
-                        if (code.equals(isCode)){
+                        if (code.equals(isCode)) {
                             //可以激活
                             //邮箱验证成功 可以向后传递
-                            boolean qurey=userTransport.activateUser(user,code);
-                            if (qurey){
+                            boolean qurey = userTransport.activateUser(user, code);
+                            if (qurey) {
                                 //修改成功
                                 return ResultVO.success("激活成功");
-                            }else {
+                            } else {
                                 return ResultVO.failure("激活失败 请重新激活");
                             }
-                        }else {
+                        } else {
                             //激活码错误
                             //重新发送激活码
 
                             return ResultVO.failure("激活码错误");
                         }
-                    }else {
+                    } else {
                         //说明激活码已经失效
                         //此时应该去service层 重新发送验证码
                         userTransport.send(user);
                         return ResultVO.failure("激活码失效");
                     }
-                }else {
+                } else {
                     //说明已经激活
-                    return ResultVO.failure(user+"已激活");
+                    return ResultVO.failure(user + "已激活");
                 }
-            }else {
+            } else {
                 //没有该用户
-                return ResultVO.failure(user+"邮箱没有注册,请先进行注册");
+                return ResultVO.failure(user + "邮箱没有注册,请先进行注册");
             }
         }
         return ResultVO.failure("请输入正确邮箱和验证码");
@@ -182,20 +186,21 @@ public class UserController extends BaseController {
 
     /**
      * <b>手机激活码激活</b>
+     *
      * @param user
      * @param code
      * @return
      * @throws Exception
      */
     @PutMapping("/validatephone")
-    public ResultVO verifyCodeByCellphone(String user,String code)throws Exception {
+    public ResultVO verifyCodeByCellphone(String user, String code) throws Exception {
         if (ValidateUtil.checkCellphone(user)
                 && code != null && !"".equals(code)) {
             User entity = new User();
             entity.setUserCode(user);
             //通过user查询是否注册
             entity = userTransport.getUser(entity);
-            if (entity!= null) {
+            if (entity != null) {
                 //则此时有该用户
                 if (entity.getActivated().equals(ActivatedEnum.ACTIVATED_FALSE.getCode())) {
                     //说明此时没有激活
@@ -238,21 +243,32 @@ public class UserController extends BaseController {
     }
 
     /**
-     *<b>进行用户登录</b>
+     * <b>进行用户登录</b>
+     *
      * @param name
      * @param password
      * @return
      * @throws Exception
      */
     @PostMapping("/dologin")
-    public ResultVO userLogin(String name,String password)throws Exception{
+    public ResultVO userLogin(String name, String password) throws Exception {
 //        验证所给的name和password的有效性
-        if (name!= null&&!"".equals(name.trim())
-                &&password!=null&&!"".equals(password.trim())){
+        if (name != null && !"".equals(name.trim())
+                && password != null && !"".equals(password.trim())) {
             //说明此时的信息都是有效的 可以将该信息向后传递
-            ResultVO type=userTransport.loginUser(name,password);
+            ResultVO type = userTransport.loginUser(name, password);
             return type;
         }
         return ResultVO.failure("请输入有效的信息");
+    }
+
+    /**
+     * <b>用户退出</b>
+     *
+     * @return
+     */
+    @GetMapping("/logout")
+    public ResultVO logOut() throws Exception {
+        return userTransport.userOut(request.getHeader("token"));
     }
 }

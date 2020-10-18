@@ -1,0 +1,7 @@
+server:
+  port: 31111
+spring:
+  application:
+    name: itrip-search-consumer
+  profiles:
+    active: eureka-client, Email

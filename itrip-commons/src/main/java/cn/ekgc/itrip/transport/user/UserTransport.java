@@ -88,4 +88,13 @@ public interface UserTransport {
      */
     @PostMapping("/loginUser")
     ResultVO loginUser(@RequestParam String name, @RequestParam String password) throws Exception;
+
+    /**
+     * <b>用户退出</b>
+     * @param token
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/Out")
+    ResultVO userOut(@RequestParam String token)throws Exception;
 }

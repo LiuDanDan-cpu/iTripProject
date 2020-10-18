@@ -1,0 +1,10 @@
+server:
+#  端口号
+  port: 22211
+spring:
+#  应用名
+  application:
+    name: itrip-biz-consumer
+#  需要加载的文件
+  profiles:
+    active: eureka-client, Email
