@@ -1,6 +1,8 @@
 package cn.ekgc.itrip.service;
 
+import cn.ekgc.itrip.base.pojo.vo.ResultVO;
 import cn.ekgc.itrip.pojo.entity.Comment;
+import cn.ekgc.itrip.pojo.vo.ItripAddCommentVO;
 import cn.ekgc.itrip.pojo.vo.Page;
 import cn.ekgc.itrip.pojo.vo.ScoreCommentVO;
 import cn.ekgc.itrip.pojo.vo.SearchCommentVO;
@@ -37,4 +39,11 @@ public interface CommentService {
      * @throws Exception
      */
     Page<Comment> getList(SearchCommentVO searchCommentVO)throws Exception;
+    /**
+     * <b>根据所给信息添加评论</b>
+     * @param itripAddCommentVO
+     * @return
+     * @throws Exception
+     */
+    ResultVO saveComment(ItripAddCommentVO itripAddCommentVO)throws Exception;
 }

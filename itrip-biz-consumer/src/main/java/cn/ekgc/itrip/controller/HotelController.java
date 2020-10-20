@@ -3,6 +3,7 @@ package cn.ekgc.itrip.controller;
 import cn.ekgc.itrip.base.BaseController;
 import cn.ekgc.itrip.base.pojo.vo.ResultVO;
 import cn.ekgc.itrip.enums.HotEnum;
+import cn.ekgc.itrip.enums.TradingAreaEnum;
 import cn.ekgc.itrip.pojo.entity.Area;
 import cn.ekgc.itrip.pojo.entity.Hotel;
 import cn.ekgc.itrip.pojo.entity.Img;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @RestController("bizController")
@@ -184,6 +186,31 @@ public class HotelController extends BaseController {
         return ResultVO.failure("获取图片失败");
     }
 
+    /**
+     * <b> 查询商圈</b>
+     * @param cityId
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/querytradearea/{cityId}")
+    public ResultVO queryTradeArea(@PathVariable Long cityId)throws Exception{
+       //根据城市id查询是否是商圈
+        Area query=new Area();
+        Area area=new Area();
+        area.setId(cityId);
+        query.setParent(area);
+        query.setIsTradingArea(TradingAreaEnum.TRADING_AREA_YES.getCode());
+        List<Area> areaList=areaTransport.getAreaByQuery(query);
+        List<String> list=new ArrayList<>();
+        if (list!=null){
+            for (int i=0;i<areaList.size();i++){
+                list.add(i,areaList.get(i).getName());
+            }
+            return ResultVO.success(areaList);
+        }
+        return ResultVO.failure("获取失败");
+
+    }
 
 }
 

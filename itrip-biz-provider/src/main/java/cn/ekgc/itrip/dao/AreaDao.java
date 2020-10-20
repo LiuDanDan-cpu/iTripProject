@@ -14,4 +14,5 @@ public interface AreaDao {
      * @throws Exception
      */
     List<Area> findListByQuery(Area area)throws Exception;
+
 }

@@ -29,6 +29,11 @@
 		<where>
 			<trim suffixOverrides="and">
 				<if test="id != null">id=#{id} and </if>
+				<if test="cityId != null">cityId=#{cityId} and </if>
+				<if test="countryId != null">countryId=#{countryId} and </if>
+				<if test="provinceId != null">provinceId=#{provinceId} and </if>
+				<if test="hotelType != null">hotelType=#{hotelType} and </if>
+				<if test="hotelLevel != null">hotelLevel=#{hotelLevel} and </if>
 			</trim>
 		</where>
 	</select>

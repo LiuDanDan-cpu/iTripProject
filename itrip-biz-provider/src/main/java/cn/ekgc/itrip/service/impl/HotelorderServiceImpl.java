@@ -223,47 +223,51 @@ public class HotelorderServiceImpl implements HotelorderService {
             //查询出酒店订单信息
             List<RoomIHO> roomIHOList=dao.getListByQuery(iho);
             if (roomIHOList != null) {
-                iho=roomIHOList.get(0);
-                //根据订单信息获取对应酒店星级和位置
-                Hotel hotel=new Hotel();
-                hotel.setId(iho.getHotelId());
-                List<Hotel> hotelList=hotelDao.getListByQuery(hotel);
-                //酒店信息
-                hotel=hotelList.get(0);
-                //查询房间的各个属性
-                Room room=new Room();
-                room.setId(iho.getRoomId());
-                room.setHotelId(iho.getHotelId());
-                List<Room> roomList=roomDao.finListByQuery(room);
-                room=roomList.get(0);
-                orderRoomVO.setId(iho.getId());
-                orderRoomVO.setHotelId(hotel.getId());
-                orderRoomVO.setHotelName(hotel.getHotelName());
-                orderRoomVO.setHotelLevel(hotel.getHotelLevel());
-                orderRoomVO.setAddress(hotel.getAddress());
-                orderRoomVO.setRoomId(room.getId());
-                orderRoomVO.setRoomTitle(room.getRoomTitle());
-                orderRoomVO.setRoomBedTypeId(room.getRoomBedTypeId());
-                orderRoomVO.setCheckInDate(iho.getCheckInDate());
-                orderRoomVO.setCheckOutDate(iho.getCheckOutDate());
-                orderRoomVO.setCount(iho.getCount());
-                orderRoomVO.setBookingDays(iho.getBookingDays());
-                orderRoomVO.setLinkUserName(iho.getLinkUserName());
-                orderRoomVO.setSpecialRequirement(iho.getSpecialRequirement());
-                orderRoomVO.setPayAmount(iho.getPayAmount());
-                orderRoomVO.setRoomPayType(room.getPayType());
-                orderRoomVO.setIsHavingBreakfast(room.getIsHavingBreakfast());
-                //查询床型
-                //设置父类信息
-                LabelDic labelDic=new LabelDic();
-                labelDic.setId(1L);
-                //设置床型id
-                LabelDic query=new LabelDic();
-                query.setParent(labelDic);
-                query.setId(room.getRoomBedTypeId());
-                List<LabelDic> labelDicList=labelDicDao.findListByQuery(query);
-                orderRoomVO.setRoomBedTypeName(labelDicList.get(0).getName());
-                return ResultVO.success(orderRoomVO);
+                if (roomIHOList.size()>0) {
+                    iho = roomIHOList.get(0);
+                    //根据订单信息获取对应酒店星级和位置
+                    Hotel hotel = new Hotel();
+                    hotel.setId(iho.getHotelId());
+                    List<Hotel> hotelList = hotelDao.getListByQuery(hotel);
+                    //酒店信息
+                    hotel = hotelList.get(0);
+                    //查询房间的各个属性
+                    Room room = new Room();
+                    room.setId(iho.getRoomId());
+                    room.setHotelId(iho.getHotelId());
+                    List<Room> roomList = roomDao.finListByQuery(room);
+                    room = roomList.get(0);
+                    orderRoomVO.setId(iho.getId());
+                    orderRoomVO.setHotelId(hotel.getId());
+                    orderRoomVO.setHotelName(hotel.getHotelName());
+                    orderRoomVO.setHotelLevel(hotel.getHotelLevel());
+                    orderRoomVO.setAddress(hotel.getAddress());
+                    orderRoomVO.setRoomId(room.getId());
+                    orderRoomVO.setRoomTitle(room.getRoomTitle());
+                    orderRoomVO.setRoomBedTypeId(room.getRoomBedTypeId());
+                    orderRoomVO.setCheckInDate(iho.getCheckInDate());
+                    orderRoomVO.setCheckOutDate(iho.getCheckOutDate());
+                    orderRoomVO.setCount(iho.getCount());
+                    orderRoomVO.setBookingDays(iho.getBookingDays());
+                    orderRoomVO.setLinkUserName(iho.getLinkUserName());
+                    orderRoomVO.setSpecialRequirement(iho.getSpecialRequirement());
+                    orderRoomVO.setPayAmount(iho.getPayAmount());
+                    orderRoomVO.setRoomPayType(room.getPayType());
+                    orderRoomVO.setIsHavingBreakfast(room.getIsHavingBreakfast());
+                    //查询床型
+                    //设置父类信息
+                    LabelDic labelDic = new LabelDic();
+                    labelDic.setId(1L);
+                    //设置床型id
+                    LabelDic query = new LabelDic();
+                    query.setParent(labelDic);
+                    query.setId(room.getRoomBedTypeId());
+                    List<LabelDic> labelDicList = labelDicDao.findListByQuery(query);
+                    orderRoomVO.setRoomBedTypeName(labelDicList.get(0).getName());
+                    return ResultVO.success(orderRoomVO);
+                }else {
+                    return ResultVO.failure("订单信息有误");
+                }
             }
             return ResultVO.failure("没有对应订单");
         }else {
@@ -334,6 +338,9 @@ public class HotelorderServiceImpl implements HotelorderService {
     public ResultVO getPersonalOrderList(ItripSearchOrderVO orderVO) throws Exception {
         User user= (User) redisUtil.getFromRedis(orderVO.getToken(),User.class);
         if (user != null) {
+            if (orderVO.getPageNo()==null){
+                orderVO.setPageNo(1);
+            }
             Page<RoomIHO> page=new Page<>();
             page.setPageSize(orderVO.getPageSize());
             page.setCurPage(orderVO.getPageNo());
@@ -347,9 +354,17 @@ public class HotelorderServiceImpl implements HotelorderService {
              */
             if (orderVO.getOrderStatus()!=-1) {
                 roomIHO.setOrderStatus(orderVO.getOrderStatus());
+            }
+            if (orderVO.getOrderNo() != null) {
                 roomIHO.setOrderNo(orderVO.getOrderNo());
+            }
+            if (orderVO.getLinkUserName() != null) {
                 roomIHO.setLinkUserName(orderVO.getLinkUserName());
-                roomIHO.setCreationDate(orderVO.getStartDate());
+            }
+           if (orderVO.getStartDate()!=null){
+               roomIHO.setCreationDate(orderVO.getStartDate());
+           }
+            if (orderVO.getEndDate()!=null){
                 roomIHO.setModifyDate(orderVO.getEndDate());
             }
             PageHelper.startPage(orderVO.getPageNo(),orderVO.getPageSize());

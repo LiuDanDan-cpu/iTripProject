@@ -175,4 +175,16 @@ public class CommentController extends BaseController {
     public ResultVO upload()throws Exception{
         return ResultVO.success();
     }
+
+    /**
+     * <b> 新增评论接口</b>
+     * @param itripAddCommentVO
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/add")
+    public ResultVO saveComment(@RequestBody ItripAddCommentVO itripAddCommentVO)throws Exception{
+        itripAddCommentVO.setToken(request.getHeader("token"));
+        return commentTransport.saveComment(itripAddCommentVO);
+    }
 }

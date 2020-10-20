@@ -26,6 +26,7 @@
 		<where>
 			<trim suffixOverrides="and">
 				<if test="id != null">a.id=#{id} and </if>
+				<if test="parent != null">a.parent=#{parent.id} and </if>
 				<if test="name != null">a.name like concat('%', #{name}, '%') and </if>
 				<if test="areaNo != null">a.areaNo=#{areaNo} and </if>
 				<if test="isActivated != null">a.isActivated=#{isActivated} and </if>

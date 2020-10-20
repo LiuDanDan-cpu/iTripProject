@@ -2,6 +2,7 @@ package cn.ekgc.itrip.service;
 
 import cn.ekgc.itrip.pojo.entity.Area;
 
+import java.util.HashSet;
 import java.util.List;
 
 public interface AreaService {

@@ -14,4 +14,11 @@ public interface ImgDao {
      * @throws Exception
      */
     List<Img> getListByQuery(Img img)throws Exception;
+
+    /**
+     * <b>根据所给对象添加图片</b>
+     * @param img
+     * @throws Exception
+     */
+    void saveImg(Img img)throws Exception;
 }
